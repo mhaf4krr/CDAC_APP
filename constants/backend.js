@@ -1,0 +1,1 @@
+export  let backend = "http://117.232.87.230/JKPWDOMS/mobile/"

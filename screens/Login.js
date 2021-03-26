@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View,Image,StyleSheet,TextInput,TouchableOpacity,Alert,Button} from 'react-native'
-import NetInfo from "@react-native-community/netinfo";
+import { Text, View,Image,StyleSheet,TextInput,TouchableOpacity,Alert,Button,Platform} from 'react-native'
 
 
 export default class Login extends Component {
@@ -9,28 +8,12 @@ export default class Login extends Component {
        form:{
         username:"",
         password:""
-       }
+       },
     }
 
-    CheckConnectivity = () => {
-        NetInfo.fetch().then(state => {
-            console.log("Connection type", state.type);
-            console.log("Is connected?", state.isConnected);
-            Alert.alert(
-                "Internet Connection Available",
-                `${state.isConnected}`,
-                [
-                  {
-                    text: "Cancel",
-                   
-                    style: "cancel",
-                  },
-                ],
-                
-              );
-          });
-      };
-    
+
+
+ 
 
     handleFormFill(key,value){
         let formData ={...this.state.form}
@@ -41,7 +24,10 @@ export default class Login extends Component {
 
     render() {
 
-       
+
+      
+
+
         return (
             <View style={styles["overallWrapper"]}>
               <View>
@@ -67,12 +53,15 @@ export default class Login extends Component {
               </View>
 
                 <View style={styles["footer"]}>
+                    <Text style={styles["internetStatus"]}>Medium : {this.props.internet.type} | Connected: {`${this.props.internet.status}`}</Text>
+
+                 
                         <Text style={styles["footerText"]}>
                             This application is designed and developed by JaKeGA
                         </Text>
                 </View>
 
-                <Button onPress={e=> this.CheckConnectivity()} title="Check Conn"/>
+               
             </View>
         )
     }
@@ -82,6 +71,12 @@ let styles = StyleSheet.create({
 
     overallWrapper:{justifyContent:"space-between",flex:1,},
   
+    internetStatus:{
+        backgroundColor:"green",
+        color:"white",
+        padding:7
+    },
+
     footer:{alignItems:"center",
     paddingVertical:15,
 backgroundColor:"gray"},
