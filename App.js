@@ -1,21 +1,29 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView} from 'react-native';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+import Login from "./screens/Login"
+
+import Dashboard from "./screens/Dashboard"
+
+export default class App extends React.Component {
+
+  state = {
+    userLoggedIn:false,
+    user:null
+  }
+
+  handleLogin = () =>{
+    this.setState({
+      userLoggedIn:true
+    })
+  }
+  render(){
+    return (
+      <SafeAreaView style={{flex:1,paddingTop:40}}>
+          {!this.state.userLoggedIn?<Login handleLogin={this.handleLogin}/>:<Dashboard/>}
+      </SafeAreaView>
+    );
+  }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
