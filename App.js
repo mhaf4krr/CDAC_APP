@@ -7,6 +7,8 @@ import Login from "./screens/Login"
 import Dashboard from "./screens/Dashboard"
 import NetInfo from "@react-native-community/netinfo";
 
+import GlobalContext from "./context/GlobalContext"
+
 
 export default class App extends React.Component {
 
@@ -20,13 +22,20 @@ export default class App extends React.Component {
     }
   }
 
-  handleLogin = () =>{
+  handleLogin = (user) =>{
     this.setState({
       userLoggedIn:true
     })
   }
 
- 
+  handleLogout = () =>{
+    this.setState({
+      userLoggedIn:false,
+      user:null
+    })
+  }
+
+
   componentDidMount(){
 
   let unsubscribe = NetInfo.addEventListener(state => {
@@ -47,8 +56,18 @@ export default class App extends React.Component {
 
   render(){
     return (
-      <SafeAreaView style={{flex:1,paddingTop:40}}>
-          {!this.state.userLoggedIn?<Login handleLogin={this.handleLogin} internet={this.state.internet}/>:<Dashboard/>}
+      <SafeAreaView style={{flex:1}}>
+        <GlobalContext.Provider
+          value={{
+            userLoggedIn:this.state.userLoggedIn,
+            user:this.state.user,
+            internet:{...this.state.internet},
+            handleLogin:this.handleLogin,
+            handleLogout:this.handleLogout
+          }}
+        >
+          {!this.state.userLoggedIn?<Login handleLogin={this.handleLogin} internet={this.state.internet}/>:<Dashboard internet={this.state.internet}/>}
+          </GlobalContext.Provider>
       </SafeAreaView>
     );
   }

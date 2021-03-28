@@ -4,10 +4,12 @@ import React, { Component } from 'react'
 import { NavigationContainer} from "@react-navigation/native"
 
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs"
-import UpdateScreen from "./Update"
+import UpdateMainScreen from "./UpdateScreenMain"
 
 import LocalScreen from "./Local"
 import ViewScreen from "./View"
+
+import UserScreen from "./UserScreen"
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -36,19 +38,24 @@ export default class Dashboard extends Component {
                           else if (route.name === 'Local') {
                             iconName = focused ? 'ios-tablet-portrait' : 'ios-tablet-portrait-outline';
                           }
-              
+                          
+                          else if (route.name === 'User') {
+                            iconName = focused ? 'ios-person-circle' : 'ios-person-circle-outline';
+                          }
                           // You can return any component that you like here!
                           return <Ionicons name={iconName} size={30} color={color} />;
                         },
                       })}
                       tabBarOptions={{
-                        activeTintColor: 'tomato',
+                        activeTintColor: '#1760cf',
                         inactiveTintColor: 'gray',
+      
                       }}
                 >
-                    <Tab.Screen name="Update" component={UpdateScreen}/>
+                    <Tab.Screen name="Update"  children={()=> <UpdateMainScreen internet={this.props.internet} />}/>
                     <Tab.Screen name="View" component={ViewScreen}/>
                     <Tab.Screen name="Local" component={LocalScreen}/>
+                    <Tab.Screen name="User" component={UserScreen}/>
                 </Tab.Navigator>
             </NavigationContainer>
            
