@@ -1,8 +1,8 @@
 Arguments: 
-  /snap/node/3790/bin/node /snap/node/3790/bin/yarn.js add expo-location@~10.0.0
+  /snap/node/3790/bin/node /snap/node/3790/bin/yarn.js global dir
 
 PATH: 
-  /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+  /home/hyder/Desktop/CDAC/node_modules/.bin:/home/hyder/Desktop/node_modules/.bin:/home/hyder/node_modules/.bin:/home/node_modules/.bin:/node_modules/.bin:/usr/local/lib/node_modules/npm/node_modules/@npmcli/run-script/lib/node-gyp-bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 
 Yarn version: 
   1.22.5
@@ -19,12 +19,12 @@ Trace:
       at SyncWriteStream._write (internal/fs/sync_write_stream.js:24:3)
       at writeOrBuffer (internal/streams/writable.js:358:12)
       at SyncWriteStream.Writable.write (internal/streams/writable.js:303:10)
-      at Object.clearLine (readline.js:1258:17)
-      at clearLine (/snap/node/3790/lib/cli.js:49658:12)
-      at ConsoleReporter.warn (/snap/node/3790/lib/cli.js:96791:43)
+      at ConsoleReporter.warn (/snap/node/3790/lib/cli.js:96792:17)
       at warn (/snap/node/3790/lib/cli.js:51521:23)
       at module.exports.exports.default (/snap/node/3790/lib/cli.js:37358:7)
       at /snap/node/3790/lib/cli.js:51532:51
+      at Generator.next (<anonymous>)
+      at step (/snap/node/3790/lib/cli.js:310:30)
 
 npm manifest: 
   {
@@ -46,10 +46,14 @@ npm manifest:
       "@react-navigation/native": "^5.9.3",
       "@react-navigation/stack": "^5.14.3",
       "expo": "~40.0.0",
+      "expo-camera": "^10.0.0",
+      "expo-file-system": "^10.0.0",
+      "expo-location": "^11.0.0",
       "expo-status-bar": "~1.0.3",
       "react": "16.13.1",
       "react-dom": "16.13.1",
       "react-native": "https://github.com/expo/react-native/archive/sdk-40.0.1.tar.gz",
+      "react-native-filesystem": "^0.1.0",
       "react-native-gesture-handler": "^1.10.3",
       "react-native-paper": "^4.7.2",
       "react-native-picker-select": "^8.0.4",
@@ -1181,7 +1185,7 @@ Lockfile:
     dependencies:
       "@types/hammerjs" "^2.0.36"
   
-  "@expo/config-plugins@1.0.23":
+  "@expo/config-plugins@1.0.23", "@expo/config-plugins@~1.0.13":
     version "1.0.23"
     resolved "https://registry.yarnpkg.com/@expo/config-plugins/-/config-plugins-1.0.23.tgz"
     integrity sha512-LjglO6CHC69qYjOynRsDBKuVbL2W3UPJs6nghgJR5aNhQCZtQsc74p4NWbQEkbPEasNtGCb355PlsV2fQskFaQ==
@@ -1694,6 +1698,14 @@ Lockfile:
     dependencies:
       "@babel/runtime" "^7.7.2"
       regenerator-runtime "^0.13.3"
+  
+  "@koale/useworker@^3.2.1":
+    version "3.4.0"
+    resolved "https://registry.yarnpkg.com/@koale/useworker/-/useworker-3.4.0.tgz#773ac623212bfaed377ff5e6cd44240ed52e40ff"
+    integrity sha512-cDGItsqyNd6SlaO+9XmDupANNNl4omjisdLcLbITdcKktlK+wpW1HwbnVjHiXBtHXQsKxxE832qVMlE/q9lmXg==
+    dependencies:
+      dequal "^1.0.0"
+      isoworker "^0.1.1"
   
   "@react-native-async-storage/async-storage@^1.14.1":
     version "1.14.1"
@@ -2938,6 +2950,11 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/depd/-/depd-1.1.2.tgz"
     integrity sha1-m81S4UwJd2PnSbJ0xDRu0uVgtak=
   
+  dequal@^1.0.0:
+    version "1.0.1"
+    resolved "https://registry.yarnpkg.com/dequal/-/dequal-1.0.1.tgz#dbbf9795ec626e9da8bd68782f4add1d23700d8b"
+    integrity sha512-Fx8jxibzkJX2aJgyfSdLhr9tlRoTnHKrRJuu2XHlAgKioN2j19/Bcbe0d4mFXYZ3+wpE2KVobUVTfDutcD17xQ==
+  
   destroy@~1.0.4:
     version "1.0.4"
     resolved "https://registry.yarnpkg.com/destroy/-/destroy-1.0.4.tgz"
@@ -3161,6 +3178,16 @@ Lockfile:
       path-browserify "^1.0.0"
       url-parse "^1.4.4"
   
+  expo-camera@^10.0.0:
+    version "10.0.0"
+    resolved "https://registry.yarnpkg.com/expo-camera/-/expo-camera-10.0.0.tgz#a48e944178ff4f12f0a415d03465c74b8fd4d8e4"
+    integrity sha512-3Z6FCRY3PGOSXhVrsBC1Jp4qDdC3m0FED1LIp32PPqDjy3ZKdagRCXauRy6ec7wqa9NLWt9gQ8GXLO6IBWgoZA==
+    dependencies:
+      "@expo/config-plugins" "~1.0.13"
+      "@koale/useworker" "^3.2.1"
+      invariant "2.2.4"
+      lodash "^4.6.0"
+  
   expo-constants@~9.3.3:
     version "9.3.5"
     resolved "https://registry.yarnpkg.com/expo-constants/-/expo-constants-9.3.5.tgz"
@@ -3176,6 +3203,14 @@ Lockfile:
     integrity sha512-NIXHe7oVfosFw/ZNZr9NBo5XJ6CmsGeK6ozldvN+RTSISmJmn+MZ3PAHuFZxLjCkOQe20J4g3S+F6aMkcD949Q==
     dependencies:
       fbjs "1.0.0"
+  
+  expo-file-system@^10.0.0:
+    version "10.0.0"
+    resolved "https://registry.yarnpkg.com/expo-file-system/-/expo-file-system-10.0.0.tgz#d25b085b44aeae3b45138342eb13b2292e6556e5"
+    integrity sha512-ojP8LpkL5mBm4pFZAhEBy3k18YLHP1R+GOTOMfHwv6Oznt4AUmskTy5cTPi3UiKOfrqd9hLjzvPZ3tLVI1xxDA==
+    dependencies:
+      "@expo/config-plugins" "~1.0.13"
+      uuid "^3.4.0"
   
   expo-file-system@~9.3.0:
     version "9.3.0"
@@ -3211,6 +3246,13 @@ Lockfile:
       invariant "^2.2.4"
       qs "^6.5.0"
       url-parse "^1.4.4"
+  
+  expo-location@^11.0.0:
+    version "11.0.0"
+    resolved "https://registry.yarnpkg.com/expo-location/-/expo-location-11.0.0.tgz#07df5b1e72cdabdbd9cf53fce985a1ec664dcbd0"
+    integrity sha512-Md/KQiCwED6bHw1kSZt4q0DaAYbabY1N2V0gn/Sj3z8r3dB3+rxWR7KqOAsnnRlQSiQl2qRpMq2HC6v1DtNnsg==
+    dependencies:
+      "@expo/config-plugins" "~1.0.13"
   
   expo-location@~10.0.0:
     version "10.0.0"
@@ -3832,7 +3874,7 @@ Lockfile:
       strip-ansi "^4.0.0"
       through "^2.3.6"
   
-  invariant@^2.2.2, invariant@^2.2.4:
+  invariant@2.2.4, invariant@^2.2.2, invariant@^2.2.4:
     version "2.2.4"
     resolved "https://registry.yarnpkg.com/invariant/-/invariant-2.2.4.tgz"
     integrity sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==
@@ -4109,6 +4151,11 @@ Lockfile:
     dependencies:
       node-fetch "^1.0.1"
       whatwg-fetch ">=0.10.0"
+  
+  isoworker@^0.1.1:
+    version "0.1.3"
+    resolved "https://registry.yarnpkg.com/isoworker/-/isoworker-0.1.3.tgz#a54587fa1da2f57d401565f83b1c4ee8b21ae372"
+    integrity sha512-NmguMXzoa/ixeQv373vIf+zYgqvZMqEFpMSysAQWfdNAf+TvjZQH7ZiQEk9ZKHkktfPqH74GSab4IVXda71hbw==
   
   jest-get-type@^24.9.0:
     version "24.9.0"
@@ -5448,6 +5495,11 @@ Lockfile:
     version "17.0.2"
     resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.2.tgz"
     integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
+  
+  react-native-filesystem@^0.1.0:
+    version "0.1.0"
+    resolved "https://registry.yarnpkg.com/react-native-filesystem/-/react-native-filesystem-0.1.0.tgz#b66eebbfa046ac12cb5d2503eda78641fca58c23"
+    integrity sha1-tm7rv6BGrBLLXSUD7aeGQfyljCM=
   
   react-native-gesture-handler@^1.10.3:
     version "1.10.3"

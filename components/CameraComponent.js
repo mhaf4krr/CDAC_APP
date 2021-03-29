@@ -9,16 +9,19 @@ export default function CameraComponent(props) {
   const [hasPermission, setHasPermission] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
 
-  let locaiton = props.route.params.location
+  let location = props.route.params.location
 
   let snap = async () => {
     if (this.camera) {
-      let photo = await this.camera.takePictureAsync();
+      let photo = await this.camera.takePictureAsync({
+        base64:true,
+        quality:0.5
+      });
       // props.navigation.navigate("Image Preview", {
       //   image: photo["uri"]
       // })
 
-      props.navigation.navigate("Image Preview",{...photo,...locaiton})
+      props.navigation.navigate("Image Preview",{photo,location})
     }
   }
 
