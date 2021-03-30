@@ -6,7 +6,7 @@ import { NavigationContainer} from "@react-navigation/native"
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs"
 import UpdateMainScreen from "./UpdateScreenMain"
 
-import LocalScreen from "./Local"
+import LocalScreen from "./LocalScreenMain"
 import ViewScreen from "./View"
 
 import UserScreen from "./UserScreen"

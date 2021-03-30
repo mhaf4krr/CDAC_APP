@@ -187,7 +187,7 @@ export default class Update extends Component {
           <ScrollView>
             <View style={styles["projectWrapper"]}>
               <Text style={styles["projectText"]}>
-                Choose a Project to Update
+                CHOOSE PROJECT
               </Text>
             </View>
 
@@ -233,21 +233,21 @@ export default class Update extends Component {
                     <Text style={styles["cardHeaderText"]}>PROJECT INFORMATION</Text>
                   </View>
                   <View style={styles["cardRow"]}>
-                    <Text style={styles["cardHeading"]}> Project</Text>
+                    <Text style={styles["cardHeading"]}> PROJECT</Text>
                     <Text> {this.state.selectedProject["projectTitle"]} </Text>
                   </View>
 
                   <Divider />
 
                   <View style={styles["cardRow"]}>
-                    <Text style={styles["cardHeading"]}> District</Text>
+                    <Text style={styles["cardHeading"]}>DISTRICT</Text>
                     <Text> {this.state.selectedProject["districtName"]}</Text>
                   </View>
 
                   <Divider />
 
                   <View style={styles["cardRow"]}>
-                    <Text style={styles["cardHeading"]}> Project ID</Text>
+                    <Text style={styles["cardHeading"]}>PROJECT ID</Text>
                     <Text> {this.state.selectedProject["projectId"]} </Text>
                   </View>
 
@@ -255,10 +255,10 @@ export default class Update extends Component {
 
                   <View style={styles["cardRowDescription"]}>
                     <Text style={styles["cardHeading"]}>
-                      Description
+                      DESCRIPTION
                               </Text>
 
-                    <Text>
+                    <Text style={{marginTop:10}}>
 
                       {this.state.selectedProject["projectDescription"]}
                     </Text>
@@ -370,7 +370,8 @@ const styles = StyleSheet.create({
   }
   ,
   projectText: {
-    fontSize: 18,
+    fontSize: 15,
+    fontWeight:"bold"
   },
 
   projectDropdown: {

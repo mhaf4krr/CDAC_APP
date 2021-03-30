@@ -25,11 +25,16 @@ export default class Local extends Component {
         let local_photos_data = await AsyncStorage.getItem("local_photo")
         if(local_photos_data === null) {
             local_photos_data = []
+
+           
             empty = true
            
         }
         else {
             local_photos_data = JSON.parse(local_photos_data)
+            local_photos_data = local_photos_data.sort(function(a, b){
+                return b["photo_label"]>b["photo_label"]?1:-1
+            })
         empty = false
         }
 
@@ -72,9 +77,7 @@ export default class Local extends Component {
     render() {
         return (
             <View style={{flex:1,position:"relative"}}>
-                <Appbar.Header style={{backgroundColor:"#4287f5"}}>
-                    <Appbar.Content title="Local Uploads"  />
-                </Appbar.Header>
+            
                 
                 {this.state.dataLoaded?(
                     <ScrollView>
@@ -87,7 +90,7 @@ export default class Local extends Component {
                         Below is list of uploads which could not be uploaded to server, but have been saved locally for synchronization
                     </Paragraph>
                             {this.state.local_uploads.map((upload)=>{
-                                return <Project key={`${upload["dated"]}_${upload["photo_id"]}`} data={upload} />
+                                return <Project navigation={this.props.navigation} key={`${upload["dated"]}_${upload["photo_id"]}`} data={upload} />
                             })}
                         </View>
                         )}

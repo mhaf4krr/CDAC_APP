@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, Image, StyleSheet } from 'react-native'
+import { Text, View, Image, StyleSheet, TouchableOpacity } from 'react-native'
 import { Button, Divider, Paragraph } from 'react-native-paper'
 
 
@@ -24,12 +24,18 @@ export default class localProjectDisplay extends Component {
 
 
 
+
         return (
 
-            <View style={{ backgroundColor: "white", paddingVertical: 25, paddingHorizontal: 15, marginVertical: 25,width:"92%",alignSelf:"center",borderRadius:10,borderColor:"#77a7e6",borderWidth:1 }}>
+            <View style={{ backgroundColor: "white", paddingVertical: 25, paddingHorizontal: 15, marginVertical: 25, width: "92%", alignSelf: "center", borderRadius: 10, borderColor: "#77a7e6", borderWidth: 1 }}>
                 <Text>DATED : {this.state["dated"]}</Text>
 
-                <Image style={{ height: 250, marginVertical: 10, borderRadius: 5 }} source={{ uri: `${this.state["photo_local_url"]}` }} />
+                <TouchableOpacity onPress={e => this.props.navigation.navigate("Preview", {
+                    uri: this.state["photo_local_url"]
+                })}>
+                    <Image style={{ height: 250, marginVertical: 10, borderRadius: 5 }} source={{ uri: `${this.state["photo_local_url"]}` }} />
+                </TouchableOpacity>
+
                 <View style={{
 
                 }}>
@@ -59,9 +65,19 @@ export default class localProjectDisplay extends Component {
                         <Text>{this.state["photo_id"]}</Text>
                     </View>
 
-                   {this.context.internet["status"]? <Button mode="contained" style={{paddingVertical:10,backgroundColor:"green"}} onPress={(e)=>{
-                       console.log("Hello World")
-                   }}>  UPLOAD </Button>:null}
+                    {this.context.internet["status"] ? (
+                        <View style={{width:"100%",flexDirection:'row',justifyContent:"space-evenly",marginTop:20}}>
+                            <Button mode="contained" icon="upload" style={{ width:"35%",paddingVertical: 10, backgroundColor: "green" }} onPress={(e) => {
+                                console.log("Hello World")
+                            }}>  UPLOAD </Button>
+
+                            <Button mode="contained" icon="map-marker" style={{width:"35%", paddingVertical: 10, backgroundColor: "orange" }} onPress={(e) => {
+                                this.props.navigation.navigate("Map",{
+                                    ...this.state.coords
+                                })
+                            }}>  MAP </Button>
+                        </View>
+                    ) : null}
 
                 </View>
             </View>
@@ -78,8 +94,8 @@ const styles = StyleSheet.create({
         width: "100%",
         alignSelf: "center",
         marginVertical: 5, backgroundColor: "#f0faff",
-         paddingHorizontal: 20,
-         borderRadius: 5,
-        paddingVertical:5
+        paddingHorizontal: 20,
+        borderRadius: 5,
+        paddingVertical: 5
     }
 })

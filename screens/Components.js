@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
 import { Text, View, ScrollView, StyleSheet, Button, Touchable, TouchableOpacity } from 'react-native'
+
+// LOCATION HERE
+
 import * as Location from 'expo-location';
 
 import { List, Paragraph, Caption, Headline, Divider, Button as ButtonPaper } from "react-native-paper"
@@ -29,7 +32,7 @@ export default class Components extends Component {
                 throw new Error("Location Denied")
             }
 
-            let location = await Location.getCurrentPositionAsync({})
+            let location = await Location.getCurrentPositionAsync({accuracy:3})
             this.setState({
                 location: location
             })

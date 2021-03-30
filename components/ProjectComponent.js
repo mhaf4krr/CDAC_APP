@@ -10,8 +10,9 @@ export default function ProjectComponent(props) {
     return (
      <View>
         <List.Accordion
+
         title={props.title}
-        style={{color:"black"}}
+        style={{color:"black",fontSize:15}}
         left={props => <List.Icon {...props} color="#4287f5" icon="folder" />}
         expanded={expanded}
         onPress={()=>{
