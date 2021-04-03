@@ -6,6 +6,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import GlobalContext from "../context/GlobalContext"
 
+import {upload_server} from "../constants/backend"
+
 import * as FileSystem from 'expo-file-system';
 
 export default class ImagePreview extends Component {
@@ -20,10 +22,8 @@ export default class ImagePreview extends Component {
         photo_base64: this.props.route.params.photo["base64"],
         coords: this.props.route.params.location.coords,
        
-
-        component_id: "123",
-        project_id: "PROJ123",
-        project_title:"PRO_TITLE",
+        project_id: this.context.selectedProject["projectId"],
+        project_title:this.context.selectedProject["projectTitle"],
         btnDisabled: false,
         showOverlay:false,
         isLoading: false
@@ -76,6 +76,7 @@ export default class ImagePreview extends Component {
             coords:this.state["coords"],
             project_title:this.state["project_title"],
             project_id:this.state["project_id"],
+            project_desc:this.context.selectedProject["projectDescription"],
             dated:new Date().toLocaleDateString()
 
         }])
@@ -93,8 +94,6 @@ export default class ImagePreview extends Component {
 
     handleImageUpload = async () =>{
 
-
-
         let formBody={
             photo:this.state["photo_base64"],
             coords:this.state["coords"],
@@ -103,7 +102,7 @@ export default class ImagePreview extends Component {
         if(this.isInternetAvailable()){
               /* Internet Available Block */
             try {
-                let res = await fetch("http://192.168.43.86:3000/new",{
+                let res = await fetch(`${upload_server}new`,{
                     method:"POST",
                     body:JSON.stringify(formBody),
                     headers:new Headers({
@@ -174,12 +173,8 @@ export default class ImagePreview extends Component {
 
     render() {
 
-        
-        
         return (
-           
-
-           
+    
             <View style={styles["mainWrapper"]}>
                
                 {!this.state.showOverlay?(

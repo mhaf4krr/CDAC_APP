@@ -3,6 +3,11 @@ import { Text, View, Image, StyleSheet, TextInput, TouchableOpacity, Alert, Butt
 import GlobalContext from '../context/GlobalContext'
 
 
+import {backend} from "../constants/backend"
+
+import sha256 from "crypto-js/sha256"
+import MD5 from 'crypto-js/md5'
+
 export default class Login extends Component {
 
     state = {
@@ -10,23 +15,105 @@ export default class Login extends Component {
             username: "",
             password: ""
         },
+
+        isBtnDisabled:true
     }
 
     static contextType = GlobalContext
 
 
 
+    isBtnDisabled = ()=>{
+
+        console.log("Called ")
+
+        let form = this.state["form"]
+
+        if(form["username"] === "" || form["password"] === ""){
+            return true
+        }
+
+        return false
+    }
+
     handleFormFill(key, value) {
         let formData = { ...this.state.form }
         formData[key] = value
-        console.log(formData)
+     
         this.setState({ form: { ...formData } })
+    }
+
+     async connectToServerforAuth(){
+       try {
+        let form = this.state.form
+
+        let formData = new FormData()
+        formData.append("loginUsername",form["username"])
+        let hashedPassword = this.generateHashForPassord(form["password"])
+
+        formData.append("loginPassword",hashedPassword)
+
+        console.log(form["username"],hashedPassword)
+
+      
+
+        let response = await fetch(backend+"mobilelogMeIn.html",{
+            method:"POST",
+            body:formData
+        })
+        
+
+        if(response.status === 200){
+           let userData = await response.json()
+           
+           if(userData["success"]){
+            this.context.handleLogin(userData["empDetails"],userData["message"])
+           }
+
+           else{
+            Alert.alert(
+                "Login Failed",
+                "Either the username or password is incorrect",[
+                    {
+                        text:"Okay",
+                    }
+                ]
+            )
+           }
+          
+        }
+
+        else {
+            console.log("Login Failed")
+            Alert.alert(
+                "Error",
+                "Error occured at the server",[
+                    {
+                        text:"Okay",
+                    }
+                ]
+            )
+        }
+       } catch (error) {
+           console.log(error)
+       }
+        
+    }
+
+
+    generateHashForPassord(password){
+        let round1Hash = sha256(password).toString()
+        console.log("SHA256",round1Hash)
+        let round2Hash = MD5(round1Hash).toString()
+        console.log("SHA256 -> MD5",round2Hash) 
+        return round2Hash
     }
 
     render() {
 
 
 
+       
 
 
         return (
@@ -41,12 +128,15 @@ export default class Login extends Component {
                         <TextInput style={styles["input"]} placeholder="Username"  autoCorrect={false} autoCompleteType="off" onChangeText={val => {
                             this.handleFormFill("username", val)
                         }} />
-                        <TextInput style={styles["input"]} placeholder="Password" />
+                        <TextInput style={styles["input"]} placeholder="Password" secureTextEntry={true} onChangeText={val => {
+                            this.handleFormFill("password", val)
+                        }} />
                     </View>
 
                     <View style={styles["btnWrapper"]}>
-                        <TouchableOpacity style={styles["btnSubWrapper"]} onPress={e => {
-                            this.context.handleLogin(null)
+                        <TouchableOpacity disabled={this.isBtnDisabled()}  style={styles["btnSubWrapper"]} onPress={e => {
+                            this.connectToServerforAuth()
+                       
                         }}>
                             <Text style={styles["btnText"]}>Login</Text>
                         </TouchableOpacity>

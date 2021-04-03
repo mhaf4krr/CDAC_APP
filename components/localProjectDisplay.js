@@ -29,7 +29,7 @@ export default class localProjectDisplay extends Component {
 
             <View style={{ backgroundColor: "white", paddingVertical: 25, paddingHorizontal: 15, marginVertical: 25, width: "92%", alignSelf: "center", borderRadius: 10, borderColor: "#77a7e6", borderWidth: 1 }}>
                 <Text>DATED : {this.state["dated"]}</Text>
-
+                {console.log(this.state)}
                 <TouchableOpacity onPress={e => this.props.navigation.navigate("Preview", {
                     uri: this.state["photo_local_url"]
                 })}>
@@ -42,9 +42,16 @@ export default class localProjectDisplay extends Component {
 
                     <View style={styles["row"]}>
                         <Paragraph>
-                            Project DEscription
+                           {this.state["project_desc"]}
                         </Paragraph>
                     </View>
+
+                    <View style={styles["row"]}>
+                        <Paragraph>
+                           {this.state["project_title"]}
+                        </Paragraph>
+                    </View>
+
                     <View style={styles["row"]}>
                         <Text>PROJECT ID</Text>
                         <Text>{this.state["project_id"]}</Text>

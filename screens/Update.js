@@ -33,42 +33,25 @@ import { Divider, Button } from "react-native-paper"
 
 
 
+import GlobalContext from "../context/GlobalContext"
 
 
 
 export default class Update extends Component {
   state = {
     projectsLoaded: false,
-    projects: [],
-
     selectedProjectId: false,
-    selectedProject: null
-
-
 
   };
 
+  static contextType = GlobalContext
 
-  fetchProjectComponents = async (projectID) => {
-    let formData = new FormData()
-    formData.append("dataType", 1)
-    formData.append("projectForStage", projectID)
 
-    let components = await fetch(backend + "callForSelectedProjectStagesMobile.html", {
-      method: "POST",
-      body: formData
-    })
-
-    let data = await components.text()
-
-    data = (JSON.parse(data))
-
-  }
 
 
 
   getProjectFromID(id) {
-    let result = this.state.projects.filter((project) => {
+    let result = this.context.projects.filter((project) => {
       return project["projectId"] === id
     })
 
@@ -82,26 +65,53 @@ export default class Update extends Component {
 
   fetchProjectsFromServer = async () => {
     try {
-      let result = await fetch(backend + "callLoginProjectList.html");
+
+     
+
+      let empId = this.context.user["empId"]
+
+      console.log("empId", empId)
+
+      console.log("Fetching Projects from Server")
+      let formData = new FormData()
+
+      formData.append("empId", empId)
+      formData.append("status", "4");
+      formData.append("type", "1");
+
+      let result = await fetch(backend + "callLoginProjectList.html", {
+        method: "POST",
+        body: formData
+      });
       let data = await result.json();
 
-      console.log(data);
+
       //Data received is an Array of Objects
 
+      // console.log("DATA FROM SERVER",data)
+
+
+      this.context.handleSetProjects([...data])
+      
       this.setState({
-        projects: [...data],
         projectsLoaded: true,
       });
 
-      this.setProjectsInLocalStorage(this.state.projects)
+     
+      
+      this.setProjectsInLocalStorage(data)
+
     } catch (error) {
       console.log("Internet Available but Server didnt respond, using Local Data if Available")
       let localData = await this.getProjectsFromLocalStorage()
-      console.log(localData)
+      // console.log(localData)
       if (localData) {
+
+        this.context.handleSetProjects(localData)
+
         this.setState({
           projectsLoaded: true,
-          projects: [...localData]
+          
         })
       }
     }
@@ -139,11 +149,33 @@ export default class Update extends Component {
 
 
     try {
+
+
+      const unsubscribe = this.props.navigation.addListener('focus', async() => {
+        // The screen is focused
+        // Call any action
+        if(this.state.unsubscribe === null){
+            this.setState({
+                unsubscribe:unsubscribe
+            })
+
+
+        }
+
+        console.log("Update is fouced")
+
+        if(this.context.internet.status){
+          this.fetchProjectsFromServer()
+        }
+
+
+      });
+
       if (this.isInternetAvailable()) {
 
         // await this.useLocalData()
 
-        this.fetchProjectsFromServer()
+        await this.fetchProjectsFromServer()
         console.log("Internet is Available Fetching from Server")
 
       }
@@ -161,72 +193,85 @@ export default class Update extends Component {
   async useLocalData() {
     let localData = await this.getProjectsFromLocalStorage()
     if (localData) {
+      this.context.handleSetProjects(localData)
+
       this.setState({
-        projects: [...localData],
-        projectsLoaded: true
+ 
+        projectsLoaded: true,
+
       })
     }
   }
 
   render() {
-
+   
     return (
+   
+
+          
       <View>
-        {/* <View style={styles["headerWrapper"]}>
-          <Text style={styles["headerText"]}>UPDATE PROJECTS SCREEN</Text>
-        </View> */}
+      {/* <View style={styles["headerWrapper"]}>
+        <Text style={styles["headerText"]}>UPDATE PROJECTS SCREEN</Text>
+      </View> */}
 
-        {!this.state.projectsLoaded ? (
-          <View style={styles["loadingScreen"]}>
-            <Text>Please wait, loading projects</Text>
-            <View style={styles["activityWrapper"]}>
-              <ActivityIndicator size="large" color="#0000ff" />
-            </View>
+  
+
+      {!this.state.projectsLoaded ? (
+        <View style={styles["loadingScreen"]}>
+          <Text>Please wait, loading projects</Text>
+          <View style={styles["activityWrapper"]}>
+            <ActivityIndicator size="large" color="#0000ff" />
           </View>
-        ) : (
-          <ScrollView>
-            <View style={styles["projectWrapper"]}>
-              <Text style={styles["projectText"]}>
-                CHOOSE PROJECT
-              </Text>
+        </View>
+      ) : (
+
+
+        <ScrollView>
+          <View style={styles["projectWrapper"]}>
+            <Text style={styles["projectText"]}>
+              CHOOSE PROJECT
+            </Text>
+          </View>
+
+          <View style={styles["picker_container"]}>
+
+            <View style={styles["container"]}>
+              <Picker style={styles["picker"]}
+
+                selectedValue={this.state.selectedProjectTitle}
+
+                onValueChange={(itemValue, itemIndex) => {
+
+                  this.context.handleSetSelectedProject(this.getProjectFromID(itemValue))
+
+                  this.setState({
+                    selectedProjectId: itemValue,
+                  })
+                }
+
+                }
+              >
+
+                {this.context.projects.map((project) => {
+                  return (
+                    <Picker.Item key={project["projectId"]} projectSel={project} label={`${project["projectTitle"]} | ${project["districtName"]} `} value={project["projectId"]}
+                    />
+                  )
+                })}
+
+              </Picker>
+
             </View>
 
-            <View style={styles["picker_container"]}>
-
-              <View style={styles["container"]}>
-                <Picker style={styles["picker"]}
-
-                  selectedValue={this.state.selectedProjectTitle}
-
-                  onValueChange={(itemValue, itemIndex) => {
-                    this.setState({
-                      selectedProjectId: itemValue,
-                      selectedProject: this.getProjectFromID(itemValue)
-                    })
-
-                    this.fetchProjectComponents(itemValue)
-                  }
-
-                  }
-                >
-
-                  {this.state.projects.map((project) => {
-                    return (
-                      <Picker.Item key={project["projectId"]} projectSel={project} label={`${project["projectTitle"]} | ${project["districtName"]} `} value={project["projectId"]}
-                      />
-                    )
-                  })}
-
-                </Picker>
-
-              </View>
-
-            </View>
+          </View>
 
 
-            <Divider style={{ marginVertical: 15 }} />
+          <Divider style={{ marginVertical: 15 }} />
 
-            {this.state.selectedProject !== null ? (
+          {this.context.selectedProject !== null ? (
+           
+
+
               <View style={styles["cardWrapper"]}>
                 <View>
                   <View style={styles["cardHeader"]}>
@@ -234,21 +279,21 @@ export default class Update extends Component {
                   </View>
                   <View style={styles["cardRow"]}>
                     <Text style={styles["cardHeading"]}> PROJECT</Text>
-                    <Text> {this.state.selectedProject["projectTitle"]} </Text>
+                    <Text> {this.context.selectedProject["projectTitle"]} </Text>
                   </View>
 
                   <Divider />
 
                   <View style={styles["cardRow"]}>
                     <Text style={styles["cardHeading"]}>DISTRICT</Text>
-                    <Text> {this.state.selectedProject["districtName"]}</Text>
+                    <Text> {this.context.selectedProject["districtName"]}</Text>
                   </View>
 
                   <Divider />
 
                   <View style={styles["cardRow"]}>
                     <Text style={styles["cardHeading"]}>PROJECT ID</Text>
-                    <Text> {this.state.selectedProject["projectId"]} </Text>
+                    <Text> {this.context.selectedProject["projectId"]} </Text>
                   </View>
 
                   <Divider />
@@ -256,11 +301,11 @@ export default class Update extends Component {
                   <View style={styles["cardRowDescription"]}>
                     <Text style={styles["cardHeading"]}>
                       DESCRIPTION
-                              </Text>
+                            </Text>
 
-                    <Text style={{marginTop:10}}>
+                    <Text style={{ marginTop: 10 }}>
 
-                      {this.state.selectedProject["projectDescription"]}
+                      {this.context.selectedProject["projectDescription"]}
                     </Text>
                   </View>
                   <Divider />
@@ -273,22 +318,32 @@ export default class Update extends Component {
                   }} mode="contained"
 
                     onPress={e => {
+                      
+                       
+
                       this.props.navigation.navigate("Project Components", {
-                        components: []
-                      })
+                     
+                       })
+
+                  
                     }}
 
                   > SHOW COMPONENTS</Button>
                 </TouchableOpacity>
+
               </View>
-            ) : null}
+          
+
+          ) : null}
 
 
 
 
-          </ScrollView>
-        )}
-      </View>
+        </ScrollView>
+
+      )}
+    </View>
+
     );
   }
 }
@@ -320,7 +375,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start'
   },
 
-  cardHeaderText: { color: "white",fontSize:15 }
+  cardHeaderText: { color: "white", fontSize: 15 }
   ,
   cardHeader: {
     backgroundColor: "#42a1f5",
@@ -328,7 +383,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
 
     paddingVertical: 20,
-    borderTopEndRadius:15
+    borderTopEndRadius: 15
   },
 
   cardWrapper: {
@@ -336,12 +391,12 @@ const styles = StyleSheet.create({
     width: "85%",
     justifyContent: "center",
     backgroundColor: "white",
- 
-    paddingBottom:10,
+
+    paddingBottom: 10,
     alignSelf: "center",
-    borderRadius:15,
-    borderColor:"#77a7e6",
-    borderWidth:1
+    borderRadius: 15,
+    borderColor: "#77a7e6",
+    borderWidth: 1
   },
 
   picker_container: {
@@ -371,7 +426,7 @@ const styles = StyleSheet.create({
   ,
   projectText: {
     fontSize: 15,
-    fontWeight:"bold"
+    fontWeight: "bold"
   },
 
   projectDropdown: {
@@ -399,7 +454,7 @@ const styles = StyleSheet.create({
 
   projectWrapper: {
     alignItems: "flex-start",
-    paddingHorizontal:15,
+    paddingHorizontal: 15,
     paddingTop: 30,
   },
 });
