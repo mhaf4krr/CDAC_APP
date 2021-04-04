@@ -46,7 +46,10 @@ export default function ProjectComponent(props) {
 
                 let result = await fetch(backend + "callLoginProjectList.html", {
                     method: "POST",
-                    body: formData
+                    body: formData,
+                    headers:new Headers({
+                        "Authorization":`Bearer ${context.token}`
+                      })
                 });
                 let data = await result.json();
 

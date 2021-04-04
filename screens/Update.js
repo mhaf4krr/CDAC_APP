@@ -81,7 +81,10 @@ export default class Update extends Component {
 
       let result = await fetch(backend + "callLoginProjectList.html", {
         method: "POST",
-        body: formData
+        body: formData,
+        headers:new Headers({
+          "Authorization":`Bearer ${this.context.token}`
+        })
       });
       let data = await result.json();
 
