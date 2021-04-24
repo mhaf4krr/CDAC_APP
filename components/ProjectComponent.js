@@ -164,7 +164,14 @@ export default function ProjectComponent(props) {
     }
 
     let onDateChange = (event, selectedDate) => {
+
+        console.log(event)
         console.log(selectedDate)
+
+        if (selectedDate===undefined){
+            setShowDateSelector(false)
+            return
+        }
         let date = selectedDate
         setShowDateSelector(false)
         setDate(date)
@@ -221,14 +228,15 @@ export default function ProjectComponent(props) {
 
                                     <Divider />
 
-                                    <View style={{ paddingVertical: 15 }}><Text>Selected Date:{selectedDate.toDateString()}</Text></View>
+                                    <View style={{ paddingVertical: 15 }}><Text>Selected Date:{selectedDate.toDateString() || new Date().toLocaleDateString() }</Text></View>
                                     <Button mode="outlined" style={{ width: "50%", alignSelf: "center", marginTop: 15 }} onPress={e => {
                                         setShowDateSelector(true)
                                     }}> Select Date</Button>
 
                                     <Divider />
 
-                                    {showDateSelector ? <DateTimePicker mode={"date"} value={selectedDate} onChange={onDateChange} /> : null}
+                                    {showDateSelector ? <DateTimePicker mode={"date"} 
+                                    onCancel={e=>{console.log("onCancel")}} onTouchCancel={()=>console.log("onTouchCancel")} value={selectedDate} onChange={onDateChange} /> : null}
                                 </View>
 
                                {context.internet.status?(
